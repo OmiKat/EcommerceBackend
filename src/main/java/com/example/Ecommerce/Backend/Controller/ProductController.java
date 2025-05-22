@@ -37,8 +37,17 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("product/{id}/image")
+    public ResponseEntity<byte[]> getImageByProductId(@PathVariable int id){
+        Product product = service.getProductById(id);
+        if(product!= null){
+            return new ResponseEntity<>(product.getImageData(),HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     @PostMapping("/product")
-    public ResponseEntity<?> addproduct(@RequestPart Product product , @RequestPart MultipartFile imageFile){
+    public ResponseEntity<?> addProduct(@RequestPart Product product , @RequestPart MultipartFile imageFile){
         Product savedProduct = null;
         try {
             savedProduct = service.addProduct(product, imageFile);
