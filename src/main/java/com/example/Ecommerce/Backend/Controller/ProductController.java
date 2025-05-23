@@ -43,7 +43,7 @@ public class ProductController {
         if(product!= null){
             return new ResponseEntity<>(product.getImageData(),HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/product")
@@ -55,6 +55,26 @@ public class ProductController {
         } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @PutMapping("/product/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable int id,@RequestPart Product product , @RequestPart MultipartFile imageFile){
+        Product updateProduct =null;
+        try {
+            updateProduct = service.updateProduct(product,imageFile);
+            return new ResponseEntity<>("Updated",HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int id){
+        Product product = service.getProductById(id);
+
+        if(product != null){
+            service.deleteProductById(id);
+            return new ResponseEntity<>("Deleted",HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 }
